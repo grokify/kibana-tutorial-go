@@ -15,15 +15,48 @@ import (
 )
 
 const (
-	indexPathShakespeare = "/shakespeare"
-	indexPathLogstash    = "/logstash-2015.05.18"
+	shakespearePath     = "/shakespeare"
+	shakespeareMappings = `{
+ "mappings" : {
+  "_default_" : {
+   "properties" : {
+    "speaker" : {"type": "keyword" },
+    "play_name" : {"type": "keyword" },
+    "line_id" : { "type" : "integer" },
+    "speech_number" : { "type" : "integer" }
+   }
+  }
+ }
+}`
+	logstashPath     = "/logstash-2015.05.18"
+	logstashMappings = `{
+  "mappings": {
+    "log": {
+      "properties": {
+        "geo": {
+          "properties": {
+            "coordinates": {
+              "type": "geo_point"
+            }
+          }
+        }
+      }
+    }
+  }
+}`
 )
 
-func createMapping(esClient elastirad.Client, path string, body v5.CreateIndexBody) error {
+func createMapping(esClient elastirad.Client, path string, mappingsBody string) error {
+	esBody := v5.CreateIndexBody{}
+	err := json.Unmarshal([]byte(mappingsBody), &esBody)
+	if err != nil {
+		return err
+	}
+
 	esReq := models.Request{
 		Method: "PUT",
 		Path:   []interface{}{path},
-		Body:   body}
+		Body:   esBody}
 
 	res, req, err := esClient.SendFastRequest(esReq)
 
@@ -41,56 +74,11 @@ func createMapping(esClient elastirad.Client, path string, body v5.CreateIndexBo
 	return err
 }
 
-func createMappingsShakespeare(esClient elastirad.Client) error {
-	mappings := []byte(`{
- "mappings" : {
-  "_default_" : {
-   "properties" : {
-    "speaker" : {"type": "keyword" },
-    "play_name" : {"type": "keyword" },
-    "line_id" : { "type" : "integer" },
-    "speech_number" : { "type" : "integer" }
-   }
-  }
- }
-}`)
-	body := v5.CreateIndexBody{}
-	err := json.Unmarshal(mappings, &body)
-	if err != nil {
-		return err
-	}
-	return createMapping(esClient, indexPathShakespeare, body)
-}
-
-func createMappingsLogstash(esClient elastirad.Client) error {
-	mappings := []byte(`{
-  "mappings": {
-    "log": {
-      "properties": {
-        "geo": {
-          "properties": {
-            "coordinates": {
-              "type": "geo_point"
-            }
-          }
-        }
-      }
-    }
-  }
-}`)
-	body := v5.CreateIndexBody{}
-	err := json.Unmarshal(mappings, &body)
-	if err != nil {
-		return err
-	}
-	return createMapping(esClient, indexPathLogstash, body)
-}
-
 func main() {
 	client := elastirad.NewClient(url.URL{})
 
-	createMappingsShakespeare(client)
-	createMappingsLogstash(client)
+	createMapping(client, shakespearePath, shakespeareMappings)
+	createMapping(client, logstashPath, logstashMappings)
 
 	fmt.Println("DONE")
 }
