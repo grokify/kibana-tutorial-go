@@ -4,13 +4,14 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 
-	"github.com/grokify/elastirad-go"
+	elastirad "github.com/grokify/elastirad-go"
 	"github.com/grokify/elastirad-go/models"
 	"github.com/grokify/elastirad-go/models/v5"
+	"github.com/grokify/mogo/log/logutil"
 	"github.com/valyala/fasthttp"
 )
 
@@ -54,19 +55,19 @@ func createMapping(esClient elastirad.Client, path string, mappingsBody string) 
 	}
 
 	esReq := models.Request{
-		Method: "PUT",
+		Method: http.MethodPut,
 		Path:   []interface{}{path},
 		Body:   esBody}
 
 	res, req, err := esClient.SendFastRequest(esReq)
 
 	if err != nil {
-		fmt.Sprintf("ERROR Creating %v Mapping: %v\n", path, err)
+		fmt.Sprintf("error creating [%v] Mapping [%v]", path, err)
 	} else if res.StatusCode() >= 400 {
-		err = errors.New(fmt.Sprintf("ERROR Creating %v Mapping: %v\n", path, res.StatusCode()))
+		err = fmt.Errorf("error creating [%v] mapping: [%v]", path, res.StatusCode())
 		fmt.Println(err)
 	} else {
-		fmt.Printf("SUCCESS Creating %v Mapping: %v\n", path, res.StatusCode())
+		fmt.Printf("success creating [%v] mapping [%v]", path, res.StatusCode())
 	}
 
 	fasthttp.ReleaseRequest(req)
@@ -77,8 +78,10 @@ func createMapping(esClient elastirad.Client, path string, mappingsBody string) 
 func main() {
 	client := elastirad.NewClient(url.URL{})
 
-	createMapping(client, shakespearePath, shakespeareMappings)
-	createMapping(client, logstashPath, logstashMappings)
+	err := createMapping(client, shakespearePath, shakespeareMappings)
+	logutil.FatalErr(err)
+	err = createMapping(client, logstashPath, logstashMappings)
+	logutil.FatalErr(err)
 
 	fmt.Println("DONE")
 }
