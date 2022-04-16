@@ -10,7 +10,7 @@ import (
 
 	elastirad "github.com/grokify/elastirad-go"
 	"github.com/grokify/elastirad-go/models"
-	"github.com/grokify/elastirad-go/models/v5"
+	v5 "github.com/grokify/elastirad-go/models/v5"
 	"github.com/grokify/mogo/log/logutil"
 	"github.com/valyala/fasthttp"
 )
@@ -62,17 +62,16 @@ func createMapping(esClient elastirad.Client, path string, mappingsBody string) 
 	res, req, err := esClient.SendFastRequest(esReq)
 
 	if err != nil {
-		fmt.Sprintf("error creating [%v] Mapping [%v]", path, err)
+		return fmt.Errorf("error creating [%v] Mapping [%v]", path, err)
 	} else if res.StatusCode() >= 400 {
-		err = fmt.Errorf("error creating [%v] mapping: [%v]", path, res.StatusCode())
-		fmt.Println(err)
+		return fmt.Errorf("error creating [%v] mapping: [%v]", path, res.StatusCode())
 	} else {
 		fmt.Printf("success creating [%v] mapping [%v]", path, res.StatusCode())
 	}
 
 	fasthttp.ReleaseRequest(req)
 	fasthttp.ReleaseResponse(res)
-	return err
+	return nil
 }
 
 func main() {
