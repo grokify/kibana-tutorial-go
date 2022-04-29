@@ -12,7 +12,6 @@ import (
 	"github.com/grokify/elastirad-go/models"
 	v5 "github.com/grokify/elastirad-go/models/v5"
 	"github.com/grokify/mogo/log/logutil"
-	"github.com/valyala/fasthttp"
 )
 
 const (
@@ -59,18 +58,16 @@ func createMapping(esClient elastirad.Client, path string, mappingsBody string) 
 		Path:   []interface{}{path},
 		Body:   esBody}
 
-	res, req, err := esClient.SendFastRequest(esReq)
+	res, err := esClient.SendRequest(esReq)
 
 	if err != nil {
-		return fmt.Errorf("error creating [%v] Mapping [%v]", path, err)
-	} else if res.StatusCode() >= 400 {
-		return fmt.Errorf("error creating [%v] mapping: [%v]", path, res.StatusCode())
+		return fmt.Errorf("error creating mapping for path [%s] error [%s]", path, err)
+	} else if res.StatusCode >= 300 {
+		return fmt.Errorf("error creating mapp for path [%s] http status [%d]", path, res.StatusCode)
 	} else {
-		fmt.Printf("success creating [%v] mapping [%v]", path, res.StatusCode())
+		fmt.Printf("success creating [%s] mapping [%d]", path, res.StatusCode)
 	}
 
-	fasthttp.ReleaseRequest(req)
-	fasthttp.ReleaseResponse(res)
 	return nil
 }
 
