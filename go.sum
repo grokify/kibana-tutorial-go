@@ -48,8 +48,8 @@ github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/
 github.com/gorilla/css v1.0.0/go.mod h1:Dn721qIggHpt4+EFCcTLTU/vk5ySda2ReITrtgBl60c=
 github.com/grokify/base36 v1.0.5/go.mod h1:L+1aaUBGfp5Ctar7KCS5G9uPABo1Ccu1Ct2iQAuhOJ4=
 github.com/grokify/bitcoinmath v0.1.0/go.mod h1:Y8OyDefB55NHGzi+uJshYmE4Hn5juIQqJahsQJN5o2k=
-github.com/grokify/elastirad-go v0.1.11 h1:9FlGSN7gxWsG9z8mcaTP58kGFyKr73TWlpr7ohIjBsA=
-github.com/grokify/elastirad-go v0.1.11/go.mod h1:TM7ZVGoioa+WBjHy7o8Zkhr7wtY5LSYIk3qrUjzU/Gk=
+github.com/grokify/elastirad-go v0.2.0 h1:rNr3p1HhKWF1cJ3j+VGMMVau4NG/nAZ/ohWpySZjw/s=
+github.com/grokify/elastirad-go v0.2.0/go.mod h1:UXjULEG8siXIL5TBY1+PnYPKdN3+MYrGJLrzHcG31X4=
 github.com/grokify/gocharts/v2 v2.6.2/go.mod h1:xBU3FCaWZSlkxPG7G/+qRQv6DwB4/Wo0PeWhOTUiBiw=
 github.com/grokify/mogo v0.38.7 h1:L6NBje3s2BDBR2SmJ6QUV7OVmaavDAVVxk1amKciaw8=
 github.com/grokify/mogo v0.38.7/go.mod h1:0ZjE06N5LaDjnaZKD1zpGriUrmwpaj0L4/F9pznebCk=
@@ -101,7 +101,6 @@ github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/
 github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6KllzawFIhcdPw=
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasthttp v1.30.0/go.mod h1:2rsYD01CKFrjjsvFxx75KlEUNpWNBY9JWD3K/7o2Cus=
-github.com/valyala/fasthttp v1.35.0/go.mod h1:t/G+3rLek+CyY9bnIE+YlMRddxVAAGjhxndDB4i4C0I=
 github.com/valyala/fasthttp v1.36.0 h1:NhqfO/cB7Ajn1czkKnWkMHyPYr5nyND14ZGPk23g0/c=
 github.com/valyala/fasthttp v1.36.0/go.mod h1:t/G+3rLek+CyY9bnIE+YlMRddxVAAGjhxndDB4i4C0I=
 github.com/valyala/fastjson v1.6.3 h1:tAKFnnwmeMGPbwJ7IwxcTPCNr3uIzoIj3/Fh90ra4xc=
