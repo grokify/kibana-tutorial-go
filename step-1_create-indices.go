@@ -64,10 +64,9 @@ func createMapping(esClient elastirad.Client, path string, mappingsBody string) 
 		return fmt.Errorf("error creating mapping for path [%s] error [%s]", path, err)
 	} else if res.StatusCode >= 300 {
 		return fmt.Errorf("error creating mapp for path [%s] http status [%d]", path, res.StatusCode)
-	} else {
-		fmt.Printf("success creating [%s] mapping [%d]", path, res.StatusCode)
 	}
 
+	fmt.Printf("success creating [%s] mapping [%d]", path, res.StatusCode)
 	return nil
 }
 
@@ -76,6 +75,7 @@ func main() {
 
 	err := createMapping(client, shakespearePath, shakespeareMappings)
 	logutil.FatalErr(err)
+
 	err = createMapping(client, logstashPath, logstashMappings)
 	logutil.FatalErr(err)
 
