@@ -5,11 +5,9 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
-
-	"github.com/grokify/mogo/log/logutil"
-	"github.com/grokify/mogo/net/httputilmore"
 )
 
 const (
@@ -49,7 +47,7 @@ func createMapping(path string, mappingsBody io.Reader) error {
 	if err != nil {
 		return err
 	}
-	req.Header.Add(httputilmore.HeaderContentType, httputilmore.ContentTypeAppJSONUtf8)
+	req.Header.Add("Content-Type", "application/json; charset=utf-8")
 
 	client := &http.Client{}
 	res, err := client.Do(req)
@@ -66,10 +64,14 @@ func createMapping(path string, mappingsBody io.Reader) error {
 
 func main() {
 	err := createMapping(shakespearePath, strings.NewReader(shakespeareMappings))
-	logutil.FatalErr(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	err = createMapping(logstashPath, strings.NewReader(logstashMappings))
-	logutil.FatalErr(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	fmt.Println("DONE")
 }
