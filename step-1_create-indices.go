@@ -42,6 +42,8 @@ const (
 }`
 )
 
+// createMapping sends the body directly to reduce dependencies, but it can be unmarshaled
+// to the struct `github.com/grokify/elastirad-go/models/v5/CreateIndexBody`
 func createMapping(path string, mappingsBody io.Reader) error {
 	req, err := http.NewRequest(http.MethodPut, path, mappingsBody)
 	if err != nil {
