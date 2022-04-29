@@ -3,15 +3,13 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-	"net/url"
+	"strings"
 
-	elastirad "github.com/grokify/elastirad-go"
-	"github.com/grokify/elastirad-go/models"
-	v5 "github.com/grokify/elastirad-go/models/v5"
 	"github.com/grokify/mogo/log/logutil"
+	"github.com/grokify/mogo/net/httputilmore"
 )
 
 const (
@@ -46,19 +44,15 @@ const (
 }`
 )
 
-func createMapping(esClient elastirad.Client, path string, mappingsBody string) error {
-	esBody := v5.CreateIndexBody{}
-	err := json.Unmarshal([]byte(mappingsBody), &esBody)
+func createMapping(path string, mappingsBody io.Reader) error {
+	req, err := http.NewRequest(http.MethodPut, path, mappingsBody)
 	if err != nil {
 		return err
 	}
+	req.Header.Add(httputilmore.HeaderContentType, httputilmore.ContentTypeAppJSONUtf8)
 
-	esReq := models.Request{
-		Method: http.MethodPut,
-		Path:   []interface{}{path},
-		Body:   esBody}
-
-	res, err := esClient.SendRequest(esReq)
+	client := &http.Client{}
+	res, err := client.Do(req)
 
 	if err != nil {
 		return fmt.Errorf("error creating mapping for path [%s] error [%s]", path, err)
@@ -71,12 +65,10 @@ func createMapping(esClient elastirad.Client, path string, mappingsBody string) 
 }
 
 func main() {
-	client := elastirad.NewClient(url.URL{})
-
-	err := createMapping(client, shakespearePath, shakespeareMappings)
+	err := createMapping(shakespearePath, strings.NewReader(shakespeareMappings))
 	logutil.FatalErr(err)
 
-	err = createMapping(client, logstashPath, logstashMappings)
+	err = createMapping(logstashPath, strings.NewReader(logstashMappings))
 	logutil.FatalErr(err)
 
 	fmt.Println("DONE")
